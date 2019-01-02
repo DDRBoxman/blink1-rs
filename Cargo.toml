@@ -1,0 +1,11 @@
+[package]
+name = "blink1"
+version = "0.1.0"
+authors = ["Colin Edwards <colin@recursivepenguin.com>"]
+edition = "2018"
+repository = "https://github.com/DDRBoxman/blink1-rs"
+description = "Library to control blink(1) devices"
+license = "MIT"
+
+[dependencies]
+hidapi = "0.5.0"
