@@ -15,7 +15,7 @@ const BLINK1_BUF_SIZE:usize = BLINK1_REPORT_SIZE + 1;
 const BLINK1_BUF2_SIZE: usize = BLINK1_REPORT2_SIZE + 1;
 
 pub struct Blink1Device {
-    _device: hidapi::HidDevice,
+    device: hidapi::HidDevice,
 }
 
 impl Blink1Device {
@@ -24,7 +24,7 @@ impl Blink1Device {
             Ok(api) => {
                 // Connect to device using its VID and PID
                 match api.open(BLINK1_VENDOR_ID, BLINK1_PRODUCT_ID) {
-                    Ok(device) => Ok(Blink1Device { _device: device }),
+                    Ok(device) => Ok(Blink1Device { device: device }),
                     Err(e) => return Err(e),
                 }
             }
@@ -50,6 +50,6 @@ impl Blink1Device {
         buf[6] = dms % 0xff;
         buf[7] = index;
 
-        return self._device.send_feature_report(&buf);
+        return self.device.send_feature_report(&buf);
     }
 }
