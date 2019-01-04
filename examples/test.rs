@@ -6,7 +6,16 @@ use std::{thread, time};
 fn main() {
     let ten_millis = time::Duration::from_millis(1000);
 
-    let device = Blink1Device::find_first().expect("Failed to open device.");
+    match Blink1Device::get_serials() {
+        Ok(serials) => {
+            for serial in serials {
+                println!("{}", serial)
+            }
+        }
+        Err(e) => println!("{}", e)
+    }
+
+    let device = Blink1Device::open_first().expect("Failed to open device.");
 
     device
         .fade_to_rgb(0, 255, 0, 0)

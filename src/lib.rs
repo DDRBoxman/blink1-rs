@@ -19,7 +19,7 @@ pub struct Blink1Device {
 }
 
 impl Blink1Device {
-    pub fn find_first() -> Result<Blink1Device, HidError> {
+    pub fn open_first() -> Result<Blink1Device, HidError> {
         match HidApi::new() {
             Ok(api) => {
                 // Connect to device using its VID and PID
@@ -28,6 +28,38 @@ impl Blink1Device {
                     Err(e) => return Err(e),
                 }
             }
+            Err(e) => return Err(e),
+        }
+    }
+
+    pub fn open(serial: &str) -> Result<Blink1Device, HidError> {
+        match HidApi::new() {
+            Ok(api) => {
+                // Connect to device using its VID and PID
+                match api.open_serial(BLINK1_VENDOR_ID, BLINK1_PRODUCT_ID, serial) {
+                    Ok(device) => Ok(Blink1Device { device }),
+                    Err(e) => return Err(e),
+                }
+            },
+            Err(e) => return Err(e),
+        }
+    }
+
+    pub fn get_serials() -> Result<Vec<String>, HidError> {
+        match HidApi::new() {
+            Ok(api) => {
+                let mut vec: Vec<String> = Vec::new();
+
+                for device in api.devices() {
+                    if device.product_id == BLINK1_PRODUCT_ID && device.vendor_id == BLINK1_VENDOR_ID {
+                        if let Some(serial) = &device.serial_number {
+                            vec.push(serial.to_owned());
+                        }
+                    }
+                }
+
+                return Ok(vec);
+            },
             Err(e) => return Err(e),
         }
     }
